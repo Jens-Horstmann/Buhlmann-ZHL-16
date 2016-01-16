@@ -5,20 +5,18 @@ package BuhlmannZHL16;
  */
 public class TissueCompartment {
 
-    private double a;       //Buhlmann a value
-    private double b;       //Buhlmann b value
-    private double k;       //Buhlmann k value calculated from Half Time
+    private double a;       //Buhlmann a value [bar]
+    private double b;       //Buhlmann b value [bar]
+    private double k;       //Buhlmann k value calculated from Half Time [1/s]
 
-    private double load;    //Actual tissue load
+    private double load;    //Actual tissue load [bar]
 
 
-    public TissueCompartment(double a, double b, double k, double initialLoad){
+    public TissueCompartment(double a, double b, double k){
         this.a = a;
         this.b = b;
         this.k = k;
-        this.load = initialLoad;
     }
-
 
     public double getA() {
         return a;
