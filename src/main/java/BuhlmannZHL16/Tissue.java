@@ -3,7 +3,7 @@ package BuhlmannZHL16;
 /**
  * Created by Jens on 16.01.2016.
  */
-public class TissueCompartment {
+public class Tissue {
 
     private double a;       //Buhlmann a value [bar]
     private double b;       //Buhlmann b value [bar]
@@ -12,10 +12,11 @@ public class TissueCompartment {
     private double load;    //Actual tissue load [bar]
 
 
-    public TissueCompartment(double a, double b, double k){
+    public Tissue(double a, double b, double k, double initialLoad){
         this.a = a;
         this.b = b;
         this.k = k;
+        this.load=initialLoad;
     }
 
     public double getA() {
