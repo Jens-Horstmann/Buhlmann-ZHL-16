@@ -5,11 +5,23 @@ package BuhlmannZHL16;
  */
 public class GradientFactors {
 
-    public double low;
-    public double high;
+    private double low;
+    private double high;
 
     private double highDepth;
     private double lowDepth;
 
+
+    public void setLow(double low) {
+        this.low = low;
+    }
+
+    public void setHigh(double high) {
+        this.high = high;
+    }
+
+    public double getGF(double depthInBar){
+        return high - ((high-low)/(lowDepth-highDepth)*(depthInBar-highDepth));
+    }
 
 }

@@ -11,7 +11,6 @@ public class Tissue {
 
     private double load;    //Actual tissue load [bar]
 
-
     public Tissue(double a, double b, double k, double initialLoad){
         this.a = a;
         this.b = b;
@@ -32,6 +31,7 @@ public class Tissue {
     }
 
 
+
     public double getLoad() {
         return load;
     }
@@ -39,4 +39,5 @@ public class Tissue {
     public void setLoad(double load) {
         this.load = load;
     }
+
 }
