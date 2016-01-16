@@ -23,7 +23,6 @@ public class TissueCompartment {
     public double getA() {
         return a;
     }
-    
 
     public double getB() {
         return b;
