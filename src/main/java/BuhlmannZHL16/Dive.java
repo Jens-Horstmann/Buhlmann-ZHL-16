@@ -8,9 +8,22 @@ import java.util.LinkedList;
 public class Dive {
 
     private int startTime;
+    private double maxDepth;
 
-    LinkedList profile = new LinkedList();
+    private LinkedList profile = new LinkedList();
 
+    private DiveDataPoint last;
 
+    public Dive(){
+        this.maxDepth = 0;
+    }
+
+    public double getDepthInBar(){
+        return last.getDepthInBar();
+    }
+
+    public void setPoint(DiveDataPoint point){
+        
+    }
 
 }
