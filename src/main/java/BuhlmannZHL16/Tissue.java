@@ -30,8 +30,6 @@ public class Tissue {
         return k;
     }
 
-
-
     public double getLoad() {
         return load;
     }
