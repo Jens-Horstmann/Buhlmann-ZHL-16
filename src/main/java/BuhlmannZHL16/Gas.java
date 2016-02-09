@@ -10,11 +10,11 @@ public class Gas {
     private double n2Amount;
 
 
-    public Gas(){               //normal Air mix
+    public Gas(){               //normal Air
         this(0.21);
     }
 
-    public Gas(double oxygenAmount){    //nitrox mixes
+    public Gas(double oxygenAmount){    //Nitrox mixes
         this(oxygenAmount,0);
     }
 
@@ -27,7 +27,7 @@ public class Gas {
     public double getN2Amount() {
         return n2Amount;
     }
-    public double getheAmount() {
+    public double getHeAmount() {
         return heAmount;
     }
 

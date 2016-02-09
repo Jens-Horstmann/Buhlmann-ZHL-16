@@ -12,6 +12,11 @@ public class DiveSettings {
     private Gas gas = new Gas();
     private double maxPP02;
 
+    private final static double flightPressure = 0.58;
+    private final static double Pw = 0.0627;            //water vapor pressure in Bar
+
+    private double logThreshold;
+
     public DiveSettings(){
         this(1.0, 10, new GradientFactors(), new Gas(), 1.4);
     }
@@ -22,6 +27,7 @@ public class DiveSettings {
         this.gf = gf;
         this.gas = gas;
         this.maxPP02 = maxPP02;
+        logThreshold = 0.1;
     }
 
     public void setSurfacePressure(double surfacePressure) {
@@ -33,6 +39,21 @@ public class DiveSettings {
     }
 
     public void setGf(GradientFactors gf) {
+        if (gf.getHigh()>1){
+            gf.setHigh(1);
+        }
+        if (gf.getHigh()<0.01){
+            gf.setHigh(0.01);
+        }
+
+        if (gf.getLow()>1){
+            gf.setLow(1);
+        }
+
+        if (gf.getLow()<0.01){
+            gf.setLow(0.01);
+        }
+
         this.gf = gf;
     }
 
@@ -42,6 +63,14 @@ public class DiveSettings {
 
     public void setMaxPP02(double maxPP02) {
         this.maxPP02 = maxPP02;
+    }
+
+    public static double getFlightPressure() {
+        return flightPressure;
+    }
+
+    public static double getPw() {
+        return Pw;
     }
 
     public double getDepthPerBar() {
@@ -62,5 +91,13 @@ public class DiveSettings {
 
     public double getSurfacePressure() {
         return surfacePressure;
+    }
+
+    public double getLogThreshold() {
+        return logThreshold;
+    }
+
+    public void setLogThreshold(double threshold) {
+        logThreshold = threshold;
     }
 }

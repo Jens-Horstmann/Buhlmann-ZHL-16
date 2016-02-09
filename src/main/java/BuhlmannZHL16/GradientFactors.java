@@ -29,6 +29,14 @@ public class GradientFactors {
         this.high = high;
     }
 
+    public double getLow() {
+        return low;
+    }
+
+    public double getHigh() {
+        return high;
+    }
+
     private double getGF(double depthInBar){
         return high - ((high-low)/(lowDepth-highDepth)*(depthInBar-highDepth));
     }
