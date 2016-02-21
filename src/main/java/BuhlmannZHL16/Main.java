@@ -17,8 +17,8 @@ public class Main {
 
         zhl16.dive(4.6, 10);
         zhl16.dive(4.6, 250);
-        zhl16.dive(4.6, 455);
-        zhl16.dive(1, 465);
+        zhl16.dive(4.6, 510);
+        zhl16.dive(1, 520);
 
     }
 

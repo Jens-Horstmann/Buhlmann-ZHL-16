@@ -43,6 +43,8 @@ public class ZHL16 {
     }
 
     private double haldaneTime(double k, double pTissue, double pTissue0, double pAlv){  //How long does it take from pTissue0 to pTissue when breathing pAlv.
+        double logArg = (pTissue - pAlv) / (pTissue0 - pAlv);
+        if (logArg<0) callOut("LogArgument < 0 in HaldaneTime(). pTissue = " + pTissue + " pTissue0 = " + pTissue0 + " pAlv = " + pAlv);
         return -(1 / k) * Math.log((pTissue - pAlv) / (pTissue0 - pAlv));                         //...
     }
 
@@ -85,38 +87,42 @@ public class ZHL16 {
     }
 */
 
-    private TissueModel calcSafetyStops(TissueModel tissues){
-        int currentStop;
+    private TissueModel calcSafetyStops(TissueModel tissues, int currentStop){
         double stopTime = 0;
 
-        //get next Stop
-        currentStop = getNextStop();
+        TissueModel instanceTissues = new TissueModel(0);
+
         stops[currentStop].setActive(true);
 
         if(currentStop>0) {
 
             //calc time at current stop until next stop
             for (int i = 0; i < 16; i++) {
-                double stopTimei = haldaneTimePAmb(stops[currentStop - 1].getStopDepth(), diveSettings.getGf().getGF(stops[currentStop].getStopDepth()), tissueModel.n2Compartments[i].getA(), tissueModel.n2Compartments[i].getB(), tissueModel.n2Compartments[i].getK(), tissues.n2Compartments[i].getLoad(), getPalvN2(stops[currentStop].getStopDepth()));
-                if (stopTimei > stopTime) {
-                    stopTime = stopTimei;
+                instanceTissues.n2Compartments[i].setLoad(tissues.n2Compartments[i].getLoad());
+                if (instanceTissues.n2Compartments[i].getLoad() > getPalvN2(stops[currentStop].getStopDepth())) {
+                    callOut("Tissue: " + i);
+                    double stopTimei = haldaneTimePAmb(stops[currentStop - 1].getStopDepth(), diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth()), instanceTissues.n2Compartments[i].getA(), instanceTissues.n2Compartments[i].getB(), instanceTissues.n2Compartments[i].getK(), instanceTissues.n2Compartments[i].getLoad(), getPalvN2(stops[currentStop].getStopDepth()));
+double x = diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth());
+                    if (stopTimei > stopTime) {
+                        stopTime = stopTimei;
+                    }
                 }
             }
             stops[currentStop].setStopTime(stopTime);
-            callOut("Stop: " + currentStop + "for " + stopTime/60 + "Minutes");
+            callOut("Stop: " + currentStop + " for " + stopTime/60 + "Minutes");
 
             //calc offgassing during that time and set tissue loads
-            tissues = setTissueLoadsSchreiner(tissues, getPalvN2(stops[currentStop].getStopDepth()), 0, stopTime);
-            tissues = setTissueLoadsSchreiner(tissues, getPalvN2(stops[currentStop].getStopDepth()), diveSettings.getMaxAscentRate(), (stops[currentStop].getStopDepth()-stops[currentStop-1].getStopDepth())/diveSettings.getMaxAscentRate());
+            setTissueLoadsSchreiner(instanceTissues, getPalvN2(stops[currentStop].getStopDepth()), 0, stopTime);
+//            setTissueLoadsSchreiner(instanceTissues, getPalvN2(stops[currentStop].getStopDepth()), diveSettings.getMaxAscentRate(), (stops[currentStop].getStopDepth()-stops[currentStop-1].getStopDepth())/diveSettings.getMaxAscentRate());
 
             //if currentStop > surfacePressure recursion for next stop
-            calcSafetyStops(tissues);
+            calcSafetyStops(instanceTissues, currentStop-1);
         }
 
-        return tissues;
+        return instanceTissues;
     }
 
-    private TissueModel setTissueLoadsSchreiner(TissueModel tissues, double pAlv, double R, double time){
+    private void setTissueLoadsSchreiner(TissueModel tissues, double pAlv, double R, double time){
         double k;
         double pTissue0;
         for (int i=0; i<16; i++){
@@ -124,10 +130,9 @@ public class ZHL16 {
             pTissue0 = tissues.n2Compartments[i].getLoad();
             tissues.n2Compartments[i].setLoad(pAlv+R*(time-(1/k))-(pAlv-pTissue0-(R/k)) * Math.exp(-k*time));
         }
-        return tissues;
     }
 
-    private int getNextStop(){
+    private int getDeepestStop(){
         double deepStop = 0;
 
         //calc theoretical deepest Stop
@@ -144,7 +149,6 @@ public class ZHL16 {
             n++;
         }
 
-
 //        callOut("Next Stop: " + meterToBar(diveSettings.stops[n], diveSettings));
 
         return n;
@@ -159,27 +163,28 @@ public class ZHL16 {
 
         int leadingStopDepth = 0;
         int leadingNdl = 0;
-        double stopDepth = 0;
+        int stopN = 0;
         double ndl = 5940;
 
         double R = (getPalvN2(pressure) - getPalvN2(lastPoint.getDepthInBar())) / (currentTimeStamp-lastPoint.getTime());
             // set tissue loads
-            tissueModel = setTissueLoadsSchreiner(tissueModel, getPalvN2(lastPoint.getDepthInBar()), R, currentTimeStamp-lastPoint.getTime());
+            setTissueLoadsSchreiner(tissueModel, getPalvN2(lastPoint.getDepthInBar()), R, currentTimeStamp-lastPoint.getTime());
 
             //calc NDL
             ndl = getNDL(pressure);
 
             //calc first stop depth
 
-//            stopDepth = getNextStop();
-            diveSettings.getGf().setLowDepth(meterToBar(diveSettings.stops[getNextStop()], diveSettings));
+            stopN = getDeepestStop();
+            if (stopN>0) {
+                diveSettings.getGf().setLowDepth(stops[stopN].getStopDepth());
 
-            //calc stop times
-            calcSafetyStops(tissueModel);
+                //calc stop times
+                calcSafetyStops(tissueModel, stopN);
+            }
+        lastPoint = new DiveDataPoint(currentTimeStamp, pressure, ndl, stopN, leadingStopDepth, leadingNdl);
 
-        lastPoint = new DiveDataPoint(currentTimeStamp, pressure, ndl, stopDepth, leadingStopDepth, leadingNdl);
-
-        System.out.println("DiveTime: " + currentTimeStamp + "s, Depth: " + pressure + "bar, NDL: " + ndl + "s, StopDepth: " + stopDepth + "bar, Leading NDL Tissue: " + leadingNdl + ", Leading Stop Depth Tissue: " + leadingStopDepth);
+        System.out.println("DiveTime: " + currentTimeStamp + "s, Depth: " + pressure + "bar, NDL: " + ndl + "s, StopDepth: " + stopN + ". Stop, Leading NDL Tissue: " + leadingNdl + ", Leading Stop Depth Tissue: " + leadingStopDepth);
 
         return lastPoint;
 

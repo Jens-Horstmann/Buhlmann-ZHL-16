@@ -8,17 +8,18 @@ public class GradientFactors {
     private double low;
     private double high;
 
-    private double highDepth = 1.0;
+    private double highDepth;
     private double lowDepth = 2.2;
 
 
-    public GradientFactors(){
-        this(0.3, 0.8);
+    public GradientFactors(double gfHighDepth){
+        this(0.3, 0.8, gfHighDepth);
     }
 
-    public GradientFactors(double gfLow, double gfHigh){
+    public GradientFactors(double gfLow, double gfHigh, double gfHighDepth){
         this.low = gfLow;
         this.high = gfHigh;
+        this.highDepth = gfHighDepth;
     }
 
     public void setLow(double low) {
