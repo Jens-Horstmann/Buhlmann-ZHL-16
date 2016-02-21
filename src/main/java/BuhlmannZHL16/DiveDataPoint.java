@@ -5,7 +5,7 @@ package BuhlmannZHL16;
  */
 public class DiveDataPoint {
 
-    private double time;
+    private long time;
     private double depthInBar;
     private double ndl;
     private double ascentCeiling;
@@ -13,11 +13,11 @@ public class DiveDataPoint {
     private int leadingNdl;
 
 
-    public DiveDataPoint(double time, double depthInBar){
+    public DiveDataPoint(long time, double depthInBar){
         this(time, depthInBar, 5940, 0, 0, 0);
     }
 
-    public DiveDataPoint(double time, double depthInBar, double ndl, double ascentCeiling, int leadingCeiling, int leadingNdl) {
+    public DiveDataPoint(long time, double depthInBar, double ndl, double ascentCeiling, int leadingCeiling, int leadingNdl) {
         this.time = time;
         this.depthInBar = depthInBar;
         this.ndl = ndl;
@@ -27,7 +27,7 @@ public class DiveDataPoint {
     }
 
 
-    public double getTime() {
+    public long getTime() {
         return time;
     }
 
@@ -43,7 +43,7 @@ public class DiveDataPoint {
         return ascentCeiling;
     }
 
-    public void setTime(double time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

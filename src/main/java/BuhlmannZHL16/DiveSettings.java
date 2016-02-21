@@ -12,8 +12,22 @@ public class DiveSettings {
     private Gas gas = new Gas();
     private double maxPP02;
 
+    private double maxAscentRate;
+
     private final static double flightPressure = 0.58;
-    private final static double Pw = 0.0627;            //water vapor pressure in Bar
+    private final static double Pw = 0;//.0627;            //water vapor pressure in Bar
+
+    public int [] stops = { 0, 5,  8, 12, 15,
+                            18, 21, 24, 27,
+                            30, 33, 36, 39,
+                            42, 45, 48, 51,
+                            54, 57, 60, 63,
+                            66, 69, 72, 75,
+                            78, 81, 84, 87,
+                            90, 93, 96, 99,
+                            102, 105, 108, 111,
+                            114, 117, 120};
+
 
     private double logThreshold;
 
@@ -28,7 +42,11 @@ public class DiveSettings {
         this.gas = gas;
         this.maxPP02 = maxPP02;
         logThreshold = 0.1;
+        maxAscentRate = 0.3;
+
     }
+
+
 
     public void setSurfacePressure(double surfacePressure) {
         this.surfacePressure = surfacePressure;
@@ -100,4 +118,10 @@ public class DiveSettings {
     public void setLogThreshold(double threshold) {
         logThreshold = threshold;
     }
+
+    public double getMaxAscentRate() { return maxAscentRate; }
+
+    public void setMaxAscentRate(double maxAscentRate) { this.maxAscentRate = maxAscentRate; }
+
+
 }

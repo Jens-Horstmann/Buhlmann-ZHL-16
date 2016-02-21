@@ -8,8 +8,8 @@ public class GradientFactors {
     private double low;
     private double high;
 
-    private double highDepth;
-    private double lowDepth;
+    private double highDepth = 1.0;
+    private double lowDepth = 2.2;
 
 
     public GradientFactors(){
@@ -37,7 +37,7 @@ public class GradientFactors {
         return high;
     }
 
-    private double getGF(double depthInBar){
+    public double getGF(double depthInBar){
         return high - ((high-low)/(lowDepth-highDepth)*(depthInBar-highDepth));
     }
 

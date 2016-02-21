@@ -6,8 +6,15 @@ package BuhlmannZHL16;
 public class SafetyStop {
 
     private double stopDepth;
-    private int stopTime;
+    private double stopTime;
     private boolean isActive;
+
+
+    public SafetyStop(double stopDepth) {
+        this.stopDepth = stopDepth;
+        stopTime = 0;
+        isActive = false;
+    }
 
     public boolean isActive() {
         return isActive;
@@ -25,11 +32,13 @@ public class SafetyStop {
         this.stopDepth = stopDepth;
     }
 
-    public int getStopTime() {
+    public double getStopTime() {
         return stopTime;
     }
 
-    public void setStopTime(int stopTime) {
+    public void setStopTime(double stopTime) {
         this.stopTime = stopTime;
     }
+
+
 }
