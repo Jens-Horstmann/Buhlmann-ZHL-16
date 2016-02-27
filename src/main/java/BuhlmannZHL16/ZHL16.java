@@ -57,7 +57,7 @@ public class ZHL16 {
     }
 
     private double getPTol(double pAmb, double a, double b, double gf){
-        return a*gf + (pAmb*(gf-gf*b+b))/b;
+        return a*gf + ((pAmb*(gf-gf*b+b))/b);
     }
 
 
@@ -73,53 +73,72 @@ public class ZHL16 {
         }
         return ndl;
     }
-/*
-    private double getStandardStopTime(double stopDepth, double shallowerStopDepth){
-        double stopTime = 0;
-        for (int i=0; i<16; i++){
-                double stopTimei = haldaneTimePAmb(shallowerStopDepth, diveSettings.getGf().getGF(shallowerStopDepth), tissueModel.n2Compartments[i].getA(), tissueModel.n2Compartments[i].getB(), tissueModel.n2Compartments[i].getK(), getPTol(stopDepth, tissueModel.n2Compartments[i].getA(),tissueModel.n2Compartments[i].getB(), diveSettings.getGf().getGF(stopDepth)), getPalvN2(stopDepth));
-                if (stopTimei > stopTime) {
-                    stopTime = stopTimei;
-                }
-        }
-        callOut("StopDepth: " + stopDepth + ": " + stopTime/60 + "Minutes" + "; GF:" + diveSettings.getGf().getGF(stopDepth));
-        return stopTime;
-    }
-*/
 
     private TissueModel calcSafetyStops(TissueModel tissues, int currentStop){
         double stopTime = 0;
 
+        double x=0;
+
         TissueModel instanceTissues = new TissueModel(0);
 
-        stops[currentStop].setActive(true);
 
         if(currentStop>0) {
 
             //calc time at current stop until next stop
             for (int i = 0; i < 16; i++) {
                 instanceTissues.n2Compartments[i].setLoad(tissues.n2Compartments[i].getLoad());
-                if (instanceTissues.n2Compartments[i].getLoad() > getPalvN2(stops[currentStop].getStopDepth())) {
-                    callOut("Tissue: " + i);
-                    double stopTimei = haldaneTimePAmb(stops[currentStop - 1].getStopDepth(), diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth()), instanceTissues.n2Compartments[i].getA(), instanceTissues.n2Compartments[i].getB(), instanceTissues.n2Compartments[i].getK(), instanceTissues.n2Compartments[i].getLoad(), getPalvN2(stops[currentStop].getStopDepth()));
-double x = diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth());
-                    if (stopTimei > stopTime) {
-                        stopTime = stopTimei;
+                double pTol = getPTol(stops[currentStop-1].getStopDepth(), instanceTissues.n2Compartments[i].getA(),instanceTissues.n2Compartments[i].getB(),diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth()));
+                if (pTol > getPalvN2(stops[currentStop].getStopDepth())) {
+                    if (instanceTissues.n2Compartments[i].getLoad() > getPalvN2(stops[currentStop].getStopDepth())) {
+                        double stopTimei = haldaneTime(instanceTissues.n2Compartments[i].getK(), pTol, instanceTissues.n2Compartments[i].getLoad(), getPalvN2(stops[currentStop].getStopDepth()));
+                        if (stopTimei > stopTime) {
+                            stopTime = stopTimei;
+                        }
                     }
                 }
             }
-            stops[currentStop].setStopTime(stopTime);
-            callOut("Stop: " + currentStop + " for " + stopTime/60 + "Minutes");
 
-            //calc offgassing during that time and set tissue loads
-            setTissueLoadsSchreiner(instanceTissues, getPalvN2(stops[currentStop].getStopDepth()), 0, stopTime);
-//            setTissueLoadsSchreiner(instanceTissues, getPalvN2(stops[currentStop].getStopDepth()), diveSettings.getMaxAscentRate(), (stops[currentStop].getStopDepth()-stops[currentStop-1].getStopDepth())/diveSettings.getMaxAscentRate());
+            if(stopTime<diveSettings.getMinStopTime()){
+                stopTime=diveSettings.getMinStopTime();
+            }
+
+                stops[currentStop].setStopTime(stopTime);
+                stops[currentStop].setActive(true);
+
+                callOut("Stop: " + barToMeter(stops[currentStop].getStopDepth(), diveSettings) + "m for " + stopTime/60 + " Minutes");
+
+                //calc offgassing during that time and set tissue loads
+                setTissueLoadsSchreiner(instanceTissues, getPalvN2(stops[currentStop].getStopDepth()), 0, stopTime);
+
+                x = diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth());
+
+//                callOut("GF: " + x);
+//                printActualGF(instanceTissues, stops[currentStop-1].getStopDepth());
+
 
             //if currentStop > surfacePressure recursion for next stop
             calcSafetyStops(instanceTissues, currentStop-1);
         }
-
         return instanceTissues;
+    }
+
+    private void printActualGF(TissueModel tissue, double depthInBar){
+
+        for ( int i=0; i<16;i++){
+            double pTol = getPTol(depthInBar, tissue.n2Compartments[i].getA(),tissue.n2Compartments[i].getB(),1);
+            double actualGF = (tissue.n2Compartments[i].getLoad()-depthInBar)/(pTol-depthInBar);
+            System.out.print(" " + Math.round(100*actualGF) + ", ");
+        }
+
+        System.out.println();
+
+        for ( int i=0; i<16;i++){
+            double pTol = getPTol(depthInBar, tissue.n2Compartments[i].getA(),tissue.n2Compartments[i].getB(),1);
+            double loadPercent = tissue.n2Compartments[i].getLoad()/pTol;
+            System.out.print(Math.round(100*(loadPercent)) + "%, ");
+        }
+
+        System.out.println();
     }
 
     private void setTissueLoadsSchreiner(TissueModel tissues, double pAlv, double R, double time){
@@ -142,6 +161,13 @@ double x = diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth());
                 deepStop = depthi;
             }
         }
+
+        if (deepStop > diveSettings.getGf().getLowDepth()){
+            diveSettings.getGf().setLowDepth(deepStop);
+            callOut("Low Depth: " + diveSettings.getGf().getLowDepth());
+//            callOut("Tissue1: " + tissueModel.n2Compartments[0].getLoad());
+        }
+
         //find deepest stop depth
 
         int n=0;
@@ -149,6 +175,7 @@ double x = diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth());
             n++;
         }
 
+//        diveSettings.getGf().setLowDepth(stops[n].getStopDepth());
 //        callOut("Next Stop: " + meterToBar(diveSettings.stops[n], diveSettings));
 
         return n;
@@ -177,7 +204,7 @@ double x = diveSettings.getGf().getGF(stops[currentStop-1].getStopDepth());
 
             stopN = getDeepestStop();
             if (stopN>0) {
-                diveSettings.getGf().setLowDepth(stops[stopN].getStopDepth());
+//                diveSettings.getGf().setLowDepth(stops[stopN].getStopDepth());
 
                 //calc stop times
                 calcSafetyStops(tissueModel, stopN);

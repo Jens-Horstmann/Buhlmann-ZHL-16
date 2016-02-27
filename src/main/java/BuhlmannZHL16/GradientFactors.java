@@ -9,17 +9,18 @@ public class GradientFactors {
     private double high;
 
     private double highDepth;
-    private double lowDepth = 2.2;
+    private double lowDepth;
 
 
-    public GradientFactors(double gfHighDepth){
-        this(0.3, 0.8, gfHighDepth);
+    public GradientFactors(double surfacePressure){
+        this(0.3, 0.85, surfacePressure);
     }
 
-    public GradientFactors(double gfLow, double gfHigh, double gfHighDepth){
+    public GradientFactors(double gfLow, double gfHigh, double surfacePressure){
         this.low = gfLow;
         this.high = gfHigh;
-        this.highDepth = gfHighDepth;
+        this.highDepth = surfacePressure;
+        this.lowDepth = surfacePressure + 0.1;
     }
 
     public void setLow(double low) {
@@ -56,5 +57,9 @@ public class GradientFactors {
 
     public void setLowDepth(double lowDepth) {
         this.lowDepth = lowDepth;
+    }
+
+    public double getLowDepth() {
+        return lowDepth;
     }
 }

@@ -11,14 +11,16 @@ public class DiveSettings {
     private GradientFactors gf;
     private Gas gas = new Gas();
     private double maxPP02;
+    private double minStopTime;
+
 
     private double maxAscentRate;
 
     private final static double flightPressure = 0.58;
-    private final static double Pw = 0;//.0627;            //water vapor pressure in Bar
+    private final static double Pw = 0.0627;            //water vapor pressure in Bar
 
-    public int [] stops = { 0, 3,  6, 12, 15,
-                            18, 21, 24, 27,
+    public int [] stops = {  0,  3,  6, 9, 12,
+                            15, 21, 24, 27,
                             30, 33, 36, 39,
                             42, 45, 48, 51,
                             54, 57, 60, 63,
@@ -43,7 +45,7 @@ public class DiveSettings {
         this.maxPP02 = maxPP02;
         logThreshold = 0.1;
         maxAscentRate = 0.3;
-
+        minStopTime = 60;
     }
 
 
@@ -123,5 +125,11 @@ public class DiveSettings {
 
     public void setMaxAscentRate(double maxAscentRate) { this.maxAscentRate = maxAscentRate; }
 
+    public double getMinStopTime() {
+        return minStopTime;
+    }
 
+    public void setMinStopTime(double minStopTime) {
+        this.minStopTime = minStopTime;
+    }
 }
