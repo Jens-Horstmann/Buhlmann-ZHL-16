@@ -5,29 +5,30 @@ package BuhlmannZHL16;
  */
 public class DiveDataPoint {
 
-    private long time;
+    private double time;
     private double depthInBar;
     private double ndl;
-    private double ascentCeiling;
-    private int leadingCeiling;
-    private int leadingNdl;
+    private double stopDepth;
+    private double stopTime;
+    private double tts;
 
+    public DiveDataPoint(){this(0,0);}
 
-    public DiveDataPoint(long time, double depthInBar){
+    public DiveDataPoint(double time, double depthInBar){
         this(time, depthInBar, 5940, 0, 0, 0);
     }
 
-    public DiveDataPoint(long time, double depthInBar, double ndl, double ascentCeiling, int leadingCeiling, int leadingNdl) {
+    public DiveDataPoint(double time, double depthInBar, double ndl, double stopDepth, double stopTime, double tts) {
         this.time = time;
         this.depthInBar = depthInBar;
         this.ndl = ndl;
-        this.ascentCeiling = ascentCeiling;
-        this.leadingCeiling = leadingCeiling;
-        this.leadingNdl = leadingNdl;
+        this.stopDepth = stopDepth;
+        this.stopTime = stopTime;
+        this.tts = tts;
     }
 
 
-    public long getTime() {
+    public double getTime() {
         return time;
     }
 
@@ -37,10 +38,6 @@ public class DiveDataPoint {
 
     public double getNdl() {
         return ndl;
-    }
-
-    public double getAscentCeiling() {
-        return ascentCeiling;
     }
 
     public void setTime(long time) {
@@ -55,23 +52,15 @@ public class DiveDataPoint {
         this.ndl = ndl;
     }
 
-    public void setAscentCeiling(double ascentCeiling) {
-        this.ascentCeiling = ascentCeiling;
+    public double getStopDepth() {
+        return stopDepth;
     }
 
-    public int getLeadingCeiling() {
-        return leadingCeiling;
+    public double getStopTime() {
+        return stopTime;
     }
 
-    public void setLeadingCeiling(int leadingCeiling) {
-        this.leadingCeiling = leadingCeiling;
-    }
-
-    public int getLeadingNdl() {
-        return leadingNdl;
-    }
-
-    public void setLeadingNdl(int leadingNdl) {
-        this.leadingNdl = leadingNdl;
+    public double getTts() {
+        return tts;
     }
 }

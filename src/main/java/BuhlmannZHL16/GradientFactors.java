@@ -13,7 +13,7 @@ public class GradientFactors {
 
 
     public GradientFactors(double surfacePressure){
-        this(0.3, 0.85, surfacePressure);
+        this(0.3, 0.8, surfacePressure);
     }
 
     public GradientFactors(double gfLow, double gfHigh, double surfacePressure){
