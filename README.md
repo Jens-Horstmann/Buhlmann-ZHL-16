@@ -9,3 +9,4 @@ Using random code on the internet written by some dude you don't know for actual
 
 Jens
 
+![First Screenshot](https://github.com/Jens-Horstmann/Buhlmann-ZHL-16/blob/master/Version1_Screenshot.PNG)
