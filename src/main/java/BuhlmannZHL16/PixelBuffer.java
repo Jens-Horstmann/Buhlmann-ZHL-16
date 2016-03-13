@@ -7,17 +7,17 @@ public class PixelBuffer {
 
     private int width;
     private int height;
-    private byte[] pixelBuffer;
+    private int[] pixelBuffer;
 
 
     public PixelBuffer(int width, int height) {
         this.width = width;
         this.height = height;
-        pixelBuffer = new byte[this.width* this.height];
+        pixelBuffer = new int[this.width* this.height];
     }
 
 
-    private int getByteNumber(int x, int y){
+    private int getArrayPosition(int x, int y){
         return y*width+x;
     }
 
@@ -30,14 +30,14 @@ public class PixelBuffer {
         return value;
     }
 
-    public void setPixel(int x, int y, byte color){
+    public void setPixel(int x, int y, int color){
         if (!isOutOfBounds(x,y)){
-            pixelBuffer[getByteNumber(x,y)] = color;
+            pixelBuffer[getArrayPosition(x,y)] = color;
         }
     }
 
-    public byte getPixel(int x, int y){
-        return pixelBuffer[getByteNumber(x,y)];
+    public int getPixel(int x, int y){
+        return pixelBuffer[getArrayPosition(x,y)];
     }
 
 }

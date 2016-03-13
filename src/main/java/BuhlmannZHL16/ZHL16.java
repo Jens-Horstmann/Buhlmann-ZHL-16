@@ -111,11 +111,8 @@ public class ZHL16 {
             }
 
             if(stopTime > 0 ) {
-//                if (stopTime < diveSettings.getMinStopTime()) {
-//                    stopTime = diveSettings.getMinStopTime();
-                    stops[currentStop].setActive(true);
-                    stops[currentStop].setStopTime(stopTime);
-//                }
+                stops[currentStop].setActive(true);
+                stops[currentStop].setStopTime(stopTime);
             }else{
                 stops[currentStop].setActive(false);
             }
@@ -187,7 +184,7 @@ public class ZHL16 {
         int n=0;
         do {
            n++;
-        } while (deepStop > meterToBar(diveSettings.stops[n], diveSettings));
+        } while (diveSettings.getGf().getLowDepth() > meterToBar(diveSettings.stops[n], diveSettings));
 
 
 //        diveSettings.getGf().setLowDepth(stops[n].getStopDepth());
@@ -215,22 +212,18 @@ public class ZHL16 {
 
         //calc first stop depth
 
-//        if (ndl<0) {
-//            stops[0].setActive(true);
-            stopN = getDeepestStop();
-//        }
-//        if (stopN>0) {
-//                diveSettings.getGf().setLowDepth(stops[stopN].getStopDepth());
-
+         stopN = getDeepestStop();
             //calc stop times
-            calcSafetyStops(tissueModel, stopN);
-//        }
+         calcSafetyStops(tissueModel, stopN);
+
         double diveTime = lastPoint.getTime() + deltaT;
+
         int nextStop = getNextStop();
+
         lastPoint = new DiveDataPoint(diveTime, pressure, ndl, stops[nextStop].getStopDepth(), stops[nextStop].getStopTime(), calcTts(nextStop));
 
-        System.out.print("DiveTime: " + lastPoint.getTime() + "s, Depth: " + pressure + "bar, NDL: " + ndl + "min, Next Stop: " + stops[nextStop].getStopTime() + "' @" + barToMeter(stops[nextStop].getStopDepth(),diveSettings) + "m, TTS:" + calcTts(nextStop)/60);
-        printActualGF(tissueModel,pressure);
+//        System.out.print("DiveTime: " + lastPoint.getTime() + "s, Depth: " + pressure + "bar, NDL: " + ndl + "min, Next Stop: " + stops[nextStop].getStopTime() + "' @" + barToMeter(stops[nextStop].getStopDepth(),diveSettings) + "m, TTS:" + calcTts(nextStop)/60);
+//        printActualGF(tissueModel,pressure);
         return lastPoint;
 
     }
