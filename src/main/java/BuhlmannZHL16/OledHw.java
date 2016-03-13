@@ -10,7 +10,7 @@ public class OledHw {
     public static int pixelsizey = 128;
     private JPanel panel = new JPanel();
 
-    FrameBufferPanel screen = new FrameBufferPanel(pixelsizex, pixelsizey, pixelsizex*0.21, pixelsizey*0.21);
+    FrameBufferPanel screen = new FrameBufferPanel(pixelsizex, pixelsizey, pixelsizex*0.21*4, pixelsizey*0.21*4);
 //    JFrame oled = new JFrame(windowName);
 
     public OledHw(JPanel panel){

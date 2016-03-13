@@ -9,6 +9,7 @@ public class ZHL16 {
     private TissueModel tissueModel;
     private DiveDataPoint lastPoint;
     private DiveSettings diveSettings;
+    private double maxDepth;
 
     private SafetyStop[] stops;
 
@@ -132,24 +133,17 @@ public class ZHL16 {
         return instanceTissues;
     }
 
-    private void printActualGF(TissueModel tissue, double depthInBar){
+    private double getActualGF(double depthInBar){
+        double actualGF=0;
 
         for ( int i=0; i<16;i++){
-            double pTol = getPTol(depthInBar, tissue.n2Compartments[i].getA(),tissue.n2Compartments[i].getB(),1);
-            double actualGF = (tissue.n2Compartments[i].getLoad()-depthInBar)/(pTol-depthInBar);
-            System.out.print(" " + Math.round(100*actualGF) + ", ");
+            double pTol = getPTol(depthInBar, tissueModel.n2Compartments[i].getA(),tissueModel.n2Compartments[i].getB(),1);
+            double actualGFi = (tissueModel.n2Compartments[i].getLoad()-depthInBar)/(pTol-depthInBar);
+            if (actualGFi>actualGF){
+                actualGF=actualGFi;
+            }
         }
-
-        System.out.println();
-/*
-        for ( int i=0; i<16;i++){
-            double pTol = getPTol(depthInBar, tissue.n2Compartments[i].getA(),tissue.n2Compartments[i].getB(),1);
-            double loadPercent = tissue.n2Compartments[i].getLoad()/pTol;
-            System.out.print(Math.round(100*(loadPercent)) + "%, ");
-        }
-
-        System.out.println();
-*/
+        return actualGF;
     }
 
     private void setTissueLoadsSchreiner(TissueModel tissues, double pAlv, double R, double time){
@@ -220,7 +214,10 @@ public class ZHL16 {
 
         int nextStop = getNextStop();
 
-        lastPoint = new DiveDataPoint(diveTime, pressure, ndl, stops[nextStop].getStopDepth(), stops[nextStop].getStopTime(), calcTts(nextStop));
+        if (pressure>maxDepth){
+            maxDepth = pressure;
+        }
+        lastPoint = new DiveDataPoint(diveTime, pressure, ndl, stops[nextStop].getStopDepth(), stops[nextStop].getStopTime(), calcTts(nextStop), 0, getActualGF(lastPoint.getDepthInBar()), maxDepth, 0);
 
 //        System.out.print("DiveTime: " + lastPoint.getTime() + "s, Depth: " + pressure + "bar, NDL: " + ndl + "min, Next Stop: " + stops[nextStop].getStopTime() + "' @" + barToMeter(stops[nextStop].getStopDepth(),diveSettings) + "m, TTS:" + calcTts(nextStop)/60);
 //        printActualGF(tissueModel,pressure);
@@ -233,10 +230,7 @@ public class ZHL16 {
         for (int i=0; i<40;i++){
             if (stops[i].isActive()) nextStop = i;
         }
-        /*
-        while(stops[nextStop].isActive()) {
-            nextStop++;
-        }*/
+
         return nextStop;
     }
 

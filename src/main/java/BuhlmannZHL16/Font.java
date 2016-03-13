@@ -12,7 +12,10 @@ public class Font {
     }
 
     public int getCharWidth(char c){
-        return fontInfo.descriptors[c-fontInfo.getStartChar()][0];
+        if(c != ' ') {
+            return fontInfo.descriptors[c - fontInfo.getStartChar()][0];
+        }else
+            return fontInfo.getSpaceWidth();
     }
 
     public int getCharHeight(char c){
@@ -20,7 +23,7 @@ public class Font {
     }
 
     public int getCharWidthBytes(char c){
-        return (fontInfo.descriptors[c-fontInfo.getStartChar()][0]+7) / 8;
+            return (fontInfo.descriptors[c - fontInfo.getStartChar()][0] + 7) / 8;
     }
 
     private byte getCharByte(char c, int byteNumber){

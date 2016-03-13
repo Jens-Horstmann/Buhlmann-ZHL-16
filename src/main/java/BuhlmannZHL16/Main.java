@@ -81,6 +81,12 @@ public class Main {
                 courser += diveDisplay.drawString(courser, 28, "² ", diveDisplay.colors.LIGHTBLUE, diveDisplay.fontArialNarrow12pB,true);
                 courser += diveDisplay.drawString(courser,20,"max:" + Math.round(zhl16.barToMeter(zhl16.getMaxAllowedDepth(),settings)-0.5) + "m", diveDisplay.colors.LIGHTBLUE, diveDisplay.fontArialNarrow12pB,true);
 
+
+                diveDisplay.drawString(50, 126, Math.round(divePoint.getTime()/60) + "min", diveDisplay.colors.YELLOWGREEN, diveDisplay.fontArialNarrow12pB, false);
+                diveDisplay.drawString(70, 126, "" + Math.round(zhl16.barToMeter(divePoint.getMaxDepth(),settings)*10)/10 + "m", diveDisplay.colors.YELLOWGREEN, diveDisplay.fontArialNarrow12pB,true);
+                diveDisplay.drawString(160, 126, 0 + "°C", diveDisplay.colors.YELLOWGREEN, diveDisplay.fontArialNarrow12pB, false);
+
+
                 diveDisplay.drawString(2, 42, "Depth:", diveDisplay.colors.RED, diveDisplay.fontArialNarrow12pB, true);
 
                 courser = 160;
@@ -92,19 +98,23 @@ public class Main {
 
                     diveDisplay.drawString(2, 74, "NDL:", diveDisplay.colors.GREEN, diveDisplay.fontArialNarrow12pB, true);
 
-                    courser = 160;
-                    courser -= diveDisplay.drawString(courser, 85, "min", diveDisplay.colors.GREEN, diveDisplay.fontArialNarrow12pB, false);
-                    courser -= diveDisplay.drawString(courser, 82, Math.round(divePoint.getNdl()/60) + "", diveDisplay.colors.GREEN, diveDisplay.fontTahoma22pB, false);
+                    if (divePoint.getNdl()<5940) {
+                        courser = 160;
+                        courser -= diveDisplay.drawString(courser, 85, "min", diveDisplay.colors.GREEN, diveDisplay.fontArialNarrow12pB, false);
+                        courser -= diveDisplay.drawString(courser, 82, Math.round(divePoint.getNdl() / 60) + "", diveDisplay.colors.GREEN, diveDisplay.fontTahoma22pB, false);
+                    }else{
+                        diveDisplay.drawString(140, 82, "- -", diveDisplay.colors.GREEN, diveDisplay.fontTahoma22pB, false);
+                    }
 
                 } else{
 
-                    diveDisplay.drawString(2, 74, "Stop:", diveDisplay.colors.RED, diveDisplay.fontArialNarrow12pB, true);
-                    diveDisplay.drawString(2, 101, "TTS:" + Math.round(divePoint.getTts()/60+0.5), diveDisplay.colors.RED, diveDisplay.fontArialNarrow12pB, true);
+                    diveDisplay.drawString(2, 74, "Stop:", diveDisplay.colors.PURPLE, diveDisplay.fontArialNarrow12pB, true);
+                    diveDisplay.drawString(2, 101, "TTS:" + Math.round(divePoint.getTts()/60+0.5), diveDisplay.colors.PURPLE, diveDisplay.fontArialNarrow12pB, true);
 
                     courser = 160;
-                    courser -= diveDisplay.drawString(courser, 85, "m", diveDisplay.colors.RED, diveDisplay.fontArialNarrow12pB, false);
-                    courser -= diveDisplay.drawString(courser, 82, Math.round(zhl16.barToMeter(divePoint.getStopDepth(), settings)) + "", diveDisplay.colors.RED, diveDisplay.fontTahoma22pB, false);
-                    courser -= diveDisplay.drawString(courser, 82, Math.round((divePoint.getStopTime()/60)+0.5) + "-", diveDisplay.colors.RED, diveDisplay.fontTahoma22pB, false);
+                    courser -= diveDisplay.drawString(courser, 85, "m", diveDisplay.colors.PURPLE, diveDisplay.fontArialNarrow12pB, false);
+                    courser -= diveDisplay.drawString(courser, 82, Math.round(zhl16.barToMeter(divePoint.getStopDepth(), settings)) + "", diveDisplay.colors.PURPLE, diveDisplay.fontTahoma22pB, false);
+                    courser -= diveDisplay.drawString(courser, 82, Math.round((divePoint.getStopTime()/60)+0.5) + "-", diveDisplay.colors.PURPLE, diveDisplay.fontTahoma22pB, false);
 
                 }
 
