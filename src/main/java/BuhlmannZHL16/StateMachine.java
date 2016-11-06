@@ -29,8 +29,17 @@ public class StateMachine {
     final int tick = 800;
 
     java.util.Timer timer0 = new java.util.Timer();
+
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    ScheduledFuture<?> result = executor.scheduleAtFixedRate(timer0Overflow(), 0, 800,TimeUnit.MILLISECONDS);
+
+    Runnable timer0Overflow= new Runnable(){
+        @Override
+        public void run() {
+            timer0OverflowFlag = true;
+            checkStates();
+        }
+    };
+
 
     private boolean timer0OverflowFlag = false;
 
@@ -101,7 +110,8 @@ public class StateMachine {
             diveDisplay.updateDisplay();
             diveDisplay.clearBuffer();
 
-  //          timer0.schedule(timer0Overflow, 0, 5000);
+            ScheduledFuture<?> result = executor.scheduleAtFixedRate(timer0Overflow, 0, 5000, TimeUnit.MILLISECONDS);
+
         }
 
         double pressure = pressureSensor.getPressure();
@@ -110,7 +120,7 @@ public class StateMachine {
         if (pressure>(settings.getSurfacePressure()+0.1)){
 
             timer0OverflowFlag = false;
- //           timer0Overflow.cancel();
+
             state = STATE_DIVEMODE;
             checkStates();
         }
@@ -124,10 +134,11 @@ public class StateMachine {
 //            public void run() {
 
         if(timer0OverflowFlag == false) {
- //           timer0.schedule(timer0Overflow, 0, tick);
+            ScheduledFuture<?> result = executor.scheduleAtFixedRate(timer0Overflow, 0, tick, TimeUnit.MILLISECONDS);
+            //           timer0.schedule(timer0Overflow, 0, tick);
         }
 
-        DiveDataPoint divePoint = zhl16.dive(pressureSensor.getPressure(), tick/1000);
+        DiveDataPoint divePoint = zhl16.dive(pressureSensor.getPressure(), tick/1000.0);
 
         int courser = 0;
         diveDisplay.drawHorizontalLine(22, 1, diveDisplay.colors.LIGHTBLUE);
@@ -153,7 +164,7 @@ public class StateMachine {
         courser -= diveDisplay.drawString(courser, 50, Math.round(zhl16.barToMeter(divePoint.getDepthInBar(), settings)*10)/10d + "", diveDisplay.colors.RED, diveDisplay.fontTahoma22pB, false);
 
 
-        if (divePoint.getNdl()>0){
+        if (true){//divePoint.getNdl()>0){
 
             diveDisplay.drawString(2, 74, "NDL:", diveDisplay.colors.GREEN, diveDisplay.fontArialNarrow12pB, true);
 
@@ -194,9 +205,5 @@ public class StateMachine {
     }
 
 
-    runnable timer0Overflow(){
-        timer0OverflowFlag = true;
-        checkStates();
-    }
 
 }
