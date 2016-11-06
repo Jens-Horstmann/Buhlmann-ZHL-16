@@ -19,7 +19,7 @@ public class PressureSensorHw {
     }
 
     public int getPressure(){
-        return pressureSlider.getValue();
+        return pressureSlider.getValue(); //+ (int)((Math.random()*50)-25);
     }
 
 }

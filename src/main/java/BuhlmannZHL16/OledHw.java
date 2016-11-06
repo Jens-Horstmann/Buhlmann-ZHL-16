@@ -6,11 +6,11 @@ import javax.swing.*;
  * Created by Jens on 06.03.2016.
  */
 public class OledHw {
-    public static int pixelsizex = 160;
+    public static int pixelsizex = 128;
     public static int pixelsizey = 128;
     private JPanel panel = new JPanel();
 
-    FrameBufferPanel screen = new FrameBufferPanel(pixelsizex, pixelsizey, pixelsizex*0.21*4, pixelsizey*0.21*4);
+    FrameBufferPanel screen = new FrameBufferPanel(pixelsizex, pixelsizey, pixelsizex*0.21, pixelsizey*0.21);
 //    JFrame oled = new JFrame(windowName);
 
     public OledHw(JPanel panel){

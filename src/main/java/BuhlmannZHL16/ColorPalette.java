@@ -21,5 +21,6 @@ public class ColorPalette {
     public final int PURPLE = 208;
     public final int PINK = 224;
     public final int REDPINK = 240;
+    public final int WHITE = 15;
 
 }

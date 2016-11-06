@@ -19,7 +19,7 @@ public class DiveSettings {
     private final static double flightPressure = 0.58;
     private final static double Pw = 0.0627;            //water vapor pressure in Bar
 
-    public int [] stops = {  0,  3,  6, 9, 12,
+    public int [] stops = {  0,  5,  8, 12,
                             15, 21, 24, 27,
                             30, 33, 36, 39,
                             42, 45, 48, 51,
@@ -28,13 +28,13 @@ public class DiveSettings {
                             78, 81, 84, 87,
                             90, 93, 96, 99,
                             102, 105, 108, 111,
-                            114, 117, 120};
+                            114, 117, 120, 123};
 
 
     private double logThreshold;
 
     public DiveSettings(){
-        this(1.0, 10.0, new GradientFactors(1), new Gas(), 1.4);
+        this(1.013, 10.0, new GradientFactors(1), new Gas(), 1.4);
     }
 
     public DiveSettings(double surfacePressure, double depthPerBar, GradientFactors gf, Gas gas, double maxPP02) {

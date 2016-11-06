@@ -18,6 +18,13 @@ public class DiveDisplay {
 
     public ColorPalette colors = new ColorPalette();
 
+    public int getDISPLAYWIDTH() {
+        return DISPLAYWIDTH;
+    }
+
+    public int getDISPLAYHEIGT() {
+        return DISPLAYHEIGT;
+    }
 
     public DiveDisplay(JPanel panel){
 
