@@ -69,4 +69,5 @@ public class FrameBufferPanel extends JPanel {
         image.setRGB(0, 0, width, height, pixels, 0, width);
         this.repaint();
     }
+
 }

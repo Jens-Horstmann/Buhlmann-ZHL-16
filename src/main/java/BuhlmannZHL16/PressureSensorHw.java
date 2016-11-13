@@ -9,8 +9,7 @@ public class PressureSensorHw {
     private JPanel panel;
 
     int initial =(int) (1.013*13108/14+0x666);
-    JSlider pressureSlider = new JSlider(JSlider.VERTICAL, 0x666, 0x399A, initial);
-
+    JSlider pressureSlider = new JSlider(JSlider.VERTICAL, initial, 0x399A, initial);   //0 = 0x666
 
     public PressureSensorHw(JPanel panel){
         this.panel = panel;

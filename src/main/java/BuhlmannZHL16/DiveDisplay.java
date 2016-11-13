@@ -14,6 +14,8 @@ public class DiveDisplay {
     private PixelBuffer pixelBuffer = new PixelBuffer(DISPLAYWIDTH, DISPLAYHEIGT);
     private PixelBuffer screenBuffer = new PixelBuffer(DISPLAYWIDTH, DISPLAYHEIGT);
 
+
+
     private int [] color = new int[256];
 
     public ColorPalette colors = new ColorPalette();
@@ -139,11 +141,18 @@ public class DiveDisplay {
         return length;
     }
 
-    public int drawString(int posX, int posY, String s, int color, Font font, boolean leftAligned){
+    public int alignLeft(){return 1;}
+    public int alignRight(){return 0;}
+    public int alignCenter(){return 3;}
+
+    public int drawString(int posX, int posY, String s, int color, Font font, int align){
         int courser = 0;
         int alignment = 0;
-        if (!leftAligned) {
+        if (align == 0) {
             alignment = -1 * getStringLength(s,font);
+        }
+        if(align == 3){
+            alignment = -1 * getStringLength(s,font)/2;
         }
         for (int i=0; i<s.length();i++){
             courser = courser + drawChar(posX+courser+alignment, posY,s.charAt(i),color, font) + 2;
@@ -206,6 +215,7 @@ public class DiveDisplay {
                 }
             }
         }
+        display.updateDisplay();
     }
 
     public void drawHorizontalLine(int line, int thickness, int color){

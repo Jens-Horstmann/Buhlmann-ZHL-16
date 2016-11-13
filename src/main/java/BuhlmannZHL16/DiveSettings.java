@@ -12,7 +12,7 @@ public class DiveSettings {
     private Gas gas = new Gas();
     private double maxPP02;
     private double minStopTime;
-
+    private double surfacePressureThreshold;
 
     private double maxAscentRate;
 
@@ -34,7 +34,7 @@ public class DiveSettings {
     private double logThreshold;
 
     public DiveSettings(){
-        this(1.013, 10.0, new GradientFactors(1), new Gas(), 1.4);
+        this(1.013, 10.0, new GradientFactors(1.013), new Gas(), 1.4);
     }
 
     public DiveSettings(double surfacePressure, double depthPerBar, GradientFactors gf, Gas gas, double maxPP02) {
@@ -46,9 +46,12 @@ public class DiveSettings {
         logThreshold = 0.1;
         maxAscentRate = 0.3;
         minStopTime = 0;
+        surfacePressureThreshold = 0.1;
     }
 
-
+    public double getSurfacePressureThreshold() {
+        return surfacePressureThreshold;
+    }
 
     public void setSurfacePressure(double surfacePressure) {
         this.surfacePressure = surfacePressure;

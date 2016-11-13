@@ -68,7 +68,7 @@ public class ZHL16 {
     }
 
 
-    private double getNDL(double depthInBar){
+    public double getNDL(double depthInBar){
         double ndl = 5940;
         for (int i=0; i<16; i++){
             double pTol = getPTol(diveSettings.getSurfacePressure(), tissueModel.n2Compartments[i].getA(), tissueModel.n2Compartments[i].getB(), diveSettings.getGf().getHigh());

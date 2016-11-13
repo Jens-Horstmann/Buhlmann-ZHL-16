@@ -10,7 +10,9 @@ public class OledHw {
     public static int pixelsizey = 128;
     private JPanel panel = new JPanel();
 
-    FrameBufferPanel screen = new FrameBufferPanel(pixelsizex, pixelsizey, pixelsizex*0.21, pixelsizey*0.21);
+    int[] pixels = new int[pixelsizex*pixelsizey];
+
+    FrameBufferPanel screen = new FrameBufferPanel(pixelsizex, pixelsizey, pixelsizex*0.36, pixelsizey*0.36);
 //    JFrame oled = new JFrame(windowName);
 
     public OledHw(JPanel panel){
@@ -23,8 +25,13 @@ public class OledHw {
     }
 
     public void drawPixel(int x, int y, int color){
-        int[] pixels = screen.lock();
+        pixels = screen.lock();
         pixels[y * pixelsizex + x] = color;
+//        screen.update(pixels);
+
+    }
+
+    public void updateDisplay(){
         screen.update(pixels);
     }
 

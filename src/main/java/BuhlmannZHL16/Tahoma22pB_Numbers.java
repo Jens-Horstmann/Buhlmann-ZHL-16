@@ -22,6 +22,7 @@ public class Tahoma22pB_Numbers {
                     {16, 21, 420}, 		// 8
                     {16, 21, 462}, 		// 9
                     {5, 21, 504}, 		// :
+
             };
 
     // Character bitmaps
